@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Bot } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function SiteHeader() {
   const linkClass =
@@ -22,12 +23,18 @@ export function SiteHeader() {
           <Link to="/" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }} activeOptions={{ exact: true }}>
             Chat
           </Link>
+          <Link to="/admin" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
+            Admin
+          </Link>
           <Link to="/testing" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
             Testing
           </Link>
           <Link to="/about" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
             About
           </Link>
+          <div className="ml-1">
+            <ThemeToggle />
+          </div>
         </nav>
       </div>
     </header>
