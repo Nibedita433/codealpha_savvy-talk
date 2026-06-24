@@ -12,7 +12,7 @@ import {
   Lightbulb,
 } from "lucide-react";
 
-export const Route = createFileRoute("/about")({
+export const Route = createFileRoute("/_authenticated/about")({
   head: () => ({
     meta: [
       { title: "About — College Helpdesk Chatbot" },
