@@ -10,8 +10,9 @@ import {
   type Analytics,
   type ArchivedConversation,
 } from "@/lib/chat-storage";
+import { RequireAdmin } from "@/components/RequireAdmin";
 
-export const Route = createFileRoute("/admin")({
+export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Admin Dashboard — College Helpdesk Chatbot" },
@@ -21,7 +22,11 @@ export const Route = createFileRoute("/admin")({
       },
     ],
   }),
-  component: AdminPage,
+  component: () => (
+    <RequireAdmin>
+      <AdminPage />
+    </RequireAdmin>
+  ),
 });
 
 function AdminPage() {

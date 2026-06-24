@@ -4,8 +4,9 @@ import { CheckCircle2, PlayCircle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { findResponse } from "@/lib/chatbot-kb";
+import { RequireAdmin } from "@/components/RequireAdmin";
 
-export const Route = createFileRoute("/testing")({
+export const Route = createFileRoute("/_authenticated/testing")({
   head: () => ({
     meta: [
       { title: "Testing Dashboard — College Helpdesk Chatbot" },
@@ -15,10 +16,13 @@ export const Route = createFileRoute("/testing")({
       },
     ],
   }),
-  component: TestingPage,
+  component: () => (
+    <RequireAdmin>
+      <TestingPage />
+    </RequireAdmin>
+  ),
 });
 
-/** 20+ predefined test cases: { query, expectedIntent | null (=fallback expected) } */
 const TEST_CASES: { query: string; expected: string | null }[] = [
   { query: "hi", expected: "greeting" },
   { query: "hello there", expected: "greeting" },
