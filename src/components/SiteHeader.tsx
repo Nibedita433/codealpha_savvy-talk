@@ -17,6 +17,7 @@ export function SiteHeader() {
   const navigate = useNavigate();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { data: isAdmin } = useHasRole("admin");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
