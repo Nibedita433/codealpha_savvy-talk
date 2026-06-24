@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import { useHasRole } from "@/lib/use-role";
 
 export function SiteHeader() {
   const linkClass =
