@@ -60,9 +60,11 @@ export function SiteHeader() {
           <Link to="/testing" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
             Testing
           </Link>
-          <Link to="/about" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
-            About
-          </Link>
+          {isAdmin && (
+            <Link to="/about" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
+              About
+            </Link>
+          )}
           <div className="ml-1 flex items-center gap-1">
             <ThemeToggle />
             {user ? (
