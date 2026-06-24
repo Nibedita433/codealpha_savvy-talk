@@ -11,6 +11,7 @@ import {
   Rocket,
   Lightbulb,
 } from "lucide-react";
+import { RequireAdmin } from "@/components/RequireAdmin";
 
 export const Route = createFileRoute("/_authenticated/about")({
   head: () => ({
@@ -23,7 +24,11 @@ export const Route = createFileRoute("/_authenticated/about")({
       },
     ],
   }),
-  component: AboutPage,
+  component: () => (
+    <RequireAdmin>
+      <AboutPage />
+    </RequireAdmin>
+  ),
 });
 
 function AboutPage() {
