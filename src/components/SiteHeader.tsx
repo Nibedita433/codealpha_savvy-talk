@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import { useHasRole } from "@/lib/use-role";
 
 export function SiteHeader() {
   const linkClass =
@@ -16,6 +17,7 @@ export function SiteHeader() {
   const navigate = useNavigate();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { data: isAdmin } = useHasRole("admin");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
@@ -58,9 +60,11 @@ export function SiteHeader() {
           <Link to="/testing" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
             Testing
           </Link>
-          <Link to="/about" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
-            About
-          </Link>
+          {isAdmin && (
+            <Link to="/about" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
+              About
+            </Link>
+          )}
           <div className="ml-1 flex items-center gap-1">
             <ThemeToggle />
             {user ? (

@@ -11,8 +11,9 @@ import {
   Rocket,
   Lightbulb,
 } from "lucide-react";
+import { RequireAdmin } from "@/components/RequireAdmin";
 
-export const Route = createFileRoute("/about")({
+export const Route = createFileRoute("/_authenticated/about")({
   head: () => ({
     meta: [
       { title: "About — College Helpdesk Chatbot" },
@@ -23,7 +24,11 @@ export const Route = createFileRoute("/about")({
       },
     ],
   }),
-  component: AboutPage,
+  component: () => (
+    <RequireAdmin>
+      <AboutPage />
+    </RequireAdmin>
+  ),
 });
 
 function AboutPage() {
