@@ -1,11 +1,40 @@
-import { Link } from "@tanstack/react-router";
-import { Bot } from "lucide-react";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Bot, LogIn, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "./ThemeToggle";
+import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function SiteHeader() {
   const linkClass =
     "px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors";
   const activeClass = "text-foreground bg-accent";
+
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "USER_UPDATED") {
+        setUser(session?.user ?? null);
+        router.invalidate();
+        if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      }
+    });
+    return () => sub.subscription.unsubscribe();
+  }, [router, queryClient]);
+
+  async function handleSignOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur">
@@ -32,8 +61,19 @@ export function SiteHeader() {
           <Link to="/about" className={linkClass} activeProps={{ className: `${linkClass} ${activeClass}` }}>
             About
           </Link>
-          <div className="ml-1">
+          <div className="ml-1 flex items-center gap-1">
             <ThemeToggle />
+            {user ? (
+              <Button variant="ghost" size="sm" onClick={handleSignOut} title={user.email ?? "Signed in"}>
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Sign out</span>
+              </Button>
+            ) : (
+              <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/auth" })}>
+                <LogIn className="h-4 w-4" />
+                <span className="hidden sm:inline">Sign in</span>
+              </Button>
+            )}
           </div>
         </nav>
       </div>
